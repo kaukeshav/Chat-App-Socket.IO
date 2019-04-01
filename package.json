@@ -1,0 +1,24 @@
+{
+  "name": "socketio",
+  "version": "1.0.0",
+  "description": "Building a chat app using Express + NodeJS and SocketIO",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kaukeshav/SocketIO.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kaukeshav/SocketIO/issues"
+  },
+  "homepage": "https://github.com/kaukeshav/SocketIO#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "path": "^0.12.7",
+    "socket.io": "^2.2.0"
+  }
+}
