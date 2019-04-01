@@ -8,5 +8,15 @@
   </head>
   <body>
     <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io("http://localhost:8000");
+      socket.on("message-from-server", function(evt) {
+        document.body.appendChild(document.createTextNode(evt.greeting));
+
+        socket.emit("message-from-client", {
+          greeting: "Hello from Client"
+        });
+      });
+    </script>
   </body>
 </html>
