@@ -5,17 +5,148 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Web Chat</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <style>
+      .well {
+        background: #f2f2f2;
+        border: 1px solid;
+      }
+      #messageArea {
+        display: none;
+      }
+    </style>
   </head>
   <body>
+    <div class="container">
+      <div class="row" id="userFormArea">
+        <div class="col-md-12">
+          <form id="userForm">
+            <div class="form-group">
+              <label for="userName">Enter User Name</label>
+              <input
+                type="text"
+                name="user-name"
+                id="userName"
+                class="form-control"
+              />
+              <br />
+              <input type="submit" class="btn btn-primary" value="Enter Chat" />
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="row" id="messageArea">
+        <!-- side bar -->
+        <aside class="col-md-4">
+          <div class="well">
+            <h3>Online Users</h3>
+            <ul id="users" class="list-group">
+              <!-- user list goes here -->
+            </ul>
+          </div>
+        </aside>
+        <!-- main content -->
+        <main class="col-md-8">
+          <div class="chat" id="chatBox">
+            <!-- user messages goes here -->
+          </div>
+          <form id="messageForm">
+            <div class="form-group">
+              <label for="messageBox">Enter Message</label>
+              <textarea
+                name="message-box"
+                class="form-control"
+                id="messageBox"
+                cols="20"
+                rows="10"
+              ></textarea>
+              <br />
+              <input
+                type="submit"
+                class="btn btn-primary"
+                value="Send Message"
+              />
+            </div>
+          </form>
+        </main>
+      </div>
+    </div>
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
     <script src="/socket.io/socket.io.js"></script>
     <script>
-      var socket = io("http://localhost:8000");
-      socket.on("message-from-server", function(evt) {
-        document.body.appendChild(document.createTextNode(evt.greeting));
+      var socket = io.connect();
 
+      var messageArea = document.querySelector("#messageArea");
+      var messageForm = document.querySelector("#messageForm");
+      var messageBox = document.querySelector("#messageBox");
+      var userFormArea = document.querySelector("#userFormArea");
+      var userForm = document.querySelector("#userForm");
+      var userName = document.querySelector("#userName");
+      var chatBox = document.querySelector("#chatBox");
+      var users = document.querySelector("#users");
+      var fragment = document.createDocumentFragment();
+
+      messageForm.addEventListener("submit", function(event) {
+        event.preventDefault();
+        // send a new message
         socket.emit("message-from-client", {
-          greeting: "Hello from Client"
+          message: messageBox.value
         });
+        // empty the message box after sending message
+        messageBox.value = "";
+      });
+
+      userFormArea.addEventListener("submit", function(event) {
+        event.preventDefault();
+        socket.emit("new-user", userName.value, function(data) {
+          if (data) {
+            userFormArea.style.display = "none";
+            messageArea.style.display = "block";
+          }
+        });
+        userName.value = "";
+      });
+
+      //when new user is added
+      socket.on("get-users", function(users) {
+        var userHtml = "";
+        users.forEach(function(each, index) {
+          userHtml += '<li class="list-group-item">' + each + "</li>";
+        });
+        users.innerHTML = userHtml;
+      });
+
+      // on recieving new message
+      socket.on("new-message", function(event) {
+        var divTag = document.createElement("div");
+        divTag.innerHTML =
+          '<div class="styles">' +
+          event.user +
+          ":</div>" +
+          "<div>" +
+          event.message +
+          "</div";
+        fragment.appendChild(divTag);
+        chatBox.appendChild(fragment);
       });
     </script>
   </body>
