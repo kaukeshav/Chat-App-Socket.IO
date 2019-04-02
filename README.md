@@ -2,7 +2,7 @@
 
 ## Building a chat app using Express + NodeJS and SocketIO
 
-### How to use this
+### How to use this in your local:
 
 #### run the following commands in root directory of project
 
