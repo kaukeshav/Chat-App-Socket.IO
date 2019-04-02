@@ -1,13 +1,13 @@
 # Web-Chat using SocketIO
 
-Building a chat app using Express + NodeJS and SocketIO
+## Building a chat app using Express + NodeJS and SocketIO
 
-## How to use this
+### How to use this
 
-# run the following commands in root directory of project
+#### run the following commands in root directory of project
 
-# npm install
+#### npm install
 
-# node app.js
+#### node app.js
 
-# open browser http://localhost:8000
+#### open browser http://localhost:8000
