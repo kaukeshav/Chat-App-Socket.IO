@@ -1,0 +1,110 @@
+body {
+    background: linear-gradient(
+      to right,
+      #232526,
+      #414345
+    ); 
+    color: #ffffff;
+  }
+  .aside-bar {
+    background: rgba(52, 58, 64, 0.54);
+    padding: 0;
+  }
+  .list-item {
+    border-bottom: 1px solid black;
+    background: #181a1b;
+    border-radius: 0 !important;
+  }
+  h3 {
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+    font-size: 18px;
+    color: white;
+    text-shadow: 1px 2px 2px black;
+    text-transform: uppercase;
+  }
+  #messageArea {
+    display: none;
+    flex: 1;
+  }
+  .label {
+    color: white;
+    padding: 10px;
+    background: #343a40;
+    margin: 0;
+    display: block;
+  }
+  .text-area {
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    margin: 0;
+    border-radius: 0;
+    border: none;
+  }
+  .text-area:focus{
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+  }
+  .send-btn {
+    background-color: black;
+    border: none;
+    border-radius: 0;
+    margin: 10px 0;
+  }
+  .chat-block {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .chat {
+    flex: 1;
+    overflow-y: auto;
+  }
+  .chat-area {
+    padding: 10px;
+    border-bottom: 1px solid black;
+  }
+  .chat-row {
+    padding: 10px 0;
+    border-bottom: 1px solid #721c24;
+  }
+  .page-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  .user-form {
+    background: #383d41;
+    color: white;
+    padding: 40px;
+    min-width: 400px;
+    box-shadow: 4px 6px black;
+    max-width: 600px;
+    margin: auto;
+  }
+  .c-form-input {
+    background: black;
+    border-radius: 0;
+    border-color: #6c757d;
+  }
+  .c-form-input:focus {
+    background: black;
+    border-color: #6c757d;
+  }
+  .enter-chat {
+    background: #212529;
+    border: none;
+    border-radius: 0;
+  }
+  .brand {
+    text-align: center;
+    padding: 20px 0;
+    font-size: 20px;
+    letter-spacing: 12px;
+    transition: color 0.4s ease-out;
+  }
+  .brand:hover {
+    color: brown;
+    transition: color 0.4s ease-in;
+  }
