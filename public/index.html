@@ -12,37 +12,134 @@
       crossorigin="anonymous"
     />
     <style>
-      .well {
-        background: #f2f2f2;
-        border: 1px solid;
+      body {
+        background: linear-gradient(
+          to right,
+          #232526,
+          #414345
+        ); 
+        color: #ffffff;
+      }
+      .aside-bar {
+        background: rgba(52, 58, 64, 0.54);
+        padding: 0;
+      }
+      .list-item {
+        border-bottom: 1px solid black;
+        background: #181a1b;
+        border-radius: 0 !important;
+      }
+      h3 {
+        margin: 0;
+        padding: 20px;
+        text-align: center;
+        font-size: 18px;
+        color: white;
+        text-shadow: 1px 2px 2px black;
+        text-transform: uppercase;
       }
       #messageArea {
         display: none;
+        flex: 1;
+      }
+      .label {
+        color: white;
+        padding: 10px;
+        background: #343a40;
+        margin: 0;
+        display: block;
+      }
+      .text-area {
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        margin: 0;
+        border-radius: 0;
+        border: none;
+      }
+      .text-area:focus{
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+      }
+      .send-btn {
+        background-color: black;
+        border: none;
+        border-radius: 0;
+        margin: 10px 0;
+      }
+      .chat-block {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .chat {
+        flex: 1;
+        overflow-y: auto;
+      }
+      .chat-area {
+        padding: 10px;
+        border-bottom: 1px solid black;
+      }
+      .chat-row {
+        padding: 10px 0;
+        border-bottom: 1px solid #721c24;
+      }
+      .page-wrapper {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+      }
+      .user-form {
+        background: #383d41;
+        color: white;
+        padding: 40px;
+        min-width: 400px;
+        box-shadow: 4px 6px black;
+      }
+      .c-form-input {
+        background: black;
+        border-radius: 0;
+        border-color: #6c757d;
+      }
+      .c-form-input:focus {
+        background: black;
+        border-color: #6c757d;
+      }
+      .enter-chat {
+        background: #212529;
+        border: none;
+        border-radius: 0;
+      }
+      .brand {
+        text-align: center;
+        padding: 20px 0;
+        font-size: 20px;
+        letter-spacing: 12px;
+        transition: color 0.4s ease-out;
+      }
+      .brand:hover {
+        color: brown;
+        transition: color 0.4s ease-in;
       }
     </style>
   </head>
   <body>
-    <div class="container">
+    <div class="container page-wrapper">
       <div class="row" id="userFormArea">
         <div class="col-md-12">
-          <form id="userForm">
+          <div class="brand">SOCKET.IO</div>
+          <form id="userForm" class="user-form">
             <div class="form-group">
               <label for="userName">Enter User Name</label>
-              <input
-                type="text"
-                name="user-name"
-                id="userName"
-                class="form-control"
-              />
+              <input type="text" name="user-name" id="userName" class="form-control c-form-input"/>
               <br />
-              <input type="submit" class="btn btn-primary" value="Enter Chat" />
+              <input type="submit" class="btn btn-primary enter-chat" value="Enter Chat" />
             </div>
           </form>
         </div>
       </div>
       <div class="row" id="messageArea">
         <!-- side bar -->
-        <aside class="col-md-4">
+        <aside class="col-md-4 aside-bar">
           <div class="well">
             <h3>Online Users</h3>
             <ul id="users" class="list-group">
@@ -51,26 +148,16 @@
           </div>
         </aside>
         <!-- main content -->
-        <main class="col-md-8">
+        <main class="col-md-8 chat-block">
           <div class="chat" id="chatBox">
             <!-- user messages goes here -->
           </div>
           <form id="messageForm">
             <div class="form-group">
-              <label for="messageBox">Enter Message</label>
-              <textarea
-                name="message-box"
-                class="form-control"
-                id="messageBox"
-                cols="20"
-                rows="10"
-              ></textarea>
+              <label for="messageBox" class="label">Enter Message</label>
+              <textarea name="message-box" class="form-control text-area" id="messageBox" cols="20"rows="10"></textarea>
               <br />
-              <input
-                type="submit"
-                class="btn btn-primary"
-                value="Send Message"
-              />
+              <input type="submit" class="btn btn-primary send-btn" value="Send Message"/>
             </div>
           </form>
         </main>
@@ -94,7 +181,6 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
       var socket = io.connect();
-
       var messageArea = document.querySelector("#messageArea");
       var messageForm = document.querySelector("#messageForm");
       var messageBox = document.querySelector("#messageBox");
@@ -107,11 +193,9 @@
 
       messageForm.addEventListener("submit", function(event) {
         event.preventDefault();
-        // send a new message
         socket.emit("message-from-client", {
           message: messageBox.value
         });
-        // empty the message box after sending message
         messageBox.value = "";
       });
 
@@ -120,31 +204,29 @@
         socket.emit("new-user", userName.value, function(data) {
           if (data) {
             userFormArea.style.display = "none";
-            messageArea.style.display = "block";
+            messageArea.style.display = "flex";
           }
         });
         userName.value = "";
       });
-
-      //when new user is added
-      socket.on("get-users", function(users) {
+        
+      socket.on("get-users", function(data) {
         var userHtml = "";
-        users.forEach(function(each, index) {
-          userHtml += '<li class="list-group-item">' + each + "</li>";
+        data.forEach(function(each, index) {
+          userHtml += '<li class="list-group-item list-item">' + each + "</li>";
         });
         users.innerHTML = userHtml;
       });
 
-      // on recieving new message
       socket.on("new-message", function(event) {
         var divTag = document.createElement("div");
         divTag.innerHTML =
-          '<div class="styles">' +
+          '<div class="chat-row"><strong>' +
           event.user +
-          ":</div>" +
-          "<div>" +
+          ":</strong>" +
+          "<span>" +
           event.message +
-          "</div";
+          "</span></div>";
         fragment.appendChild(divTag);
         chatBox.appendChild(fragment);
       });
